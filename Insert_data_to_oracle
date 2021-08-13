@@ -1,0 +1,51 @@
+#create table student (studentid varchar2(30), fname varchar2(30), lname varchar2(30),phone varchar2(20),email varchar2(50));
+
+
+import sys
+sys.path.append('../../')
+import cx_Oracle
+import config as cfg
+from datetime import datetime
+
+
+def insert_student(studentid, fname, lname, phone, email):
+    """
+    Insert a row to student table
+    :param studentid:
+    :param fname:
+    :param lname:
+    :param phone:
+	:param email:
+    :return:
+    """
+    # construct an insert statement that add a new row to the student table
+    sql = ('insert into student(studentid, fname, lname, phone, email) '
+        'values(:studentid,:fname,:lname,:phone,:email)')
+
+    try:
+           host = 'towery'
+           port = 1521
+           SID = 'DBIBASE'
+           dsn_tns = cx_Oracle.makedsn(host, port, SID)
+
+           username = 'psu'
+           password = 'psu'
+
+           conn = cx_Oracle.connect(username, password, dsn_tns)
+
+
+            # create a cursor
+           print ('after connect 2222')
+           with conn.cursor() as cursor:
+                # execute the insert statement
+               cursor.execute(sql, [studentid, fname, lname, phone,email])
+                # commit work
+               conn.commit()
+    except cx_Oracle.Error as error:
+        print('Error occurred:')
+        print(error)
+
+
+if __name__ == '__main__':
+    insert_student('1234', 'smith','adams','716', 'email_add')
+	
